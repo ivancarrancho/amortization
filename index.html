@@ -34,10 +34,10 @@
         <div class='business'>Creditin</div>
     </section>
     <section class='polls'>
-        <form>
+        <form class="form-data">
             <ul class='data'>
                 <li>
-                    <span>Nombre:</span><input type="text" class='name'>
+                    <span>Nombre:</span><input type="text" class='name' value=''>
                 </li>    
                 <li>
                     <span>ID</span><input type="number" class='identifier'>
@@ -71,7 +71,7 @@
                 </li>
                 <li>
                     <span class='years_period' style="display: none">Plazo (en años)</span>
-                    <select class='years_period' style="display: none">
+                    <select class='years_period_data' style="display: none">
                         <option value="1">1</option>
                         <option value="2">2</option>
                         <option value="3">3</option>
@@ -80,17 +80,20 @@
             </ul>
             <ul class='answer-data'>
                 <li>
-                    <span>Efectivo Anual: </span><input class='cash'> %
+                    <span>Efectivo Anual: </span><input class='cash' value=''> %
                 </li>
                 <li>
-                    <span>Nominal Anual: </span><input class='nominal'> %
+                    <span>Nominal Anual: </span><input class='nominal' value=''> %
                 </li>
                 <li>
-                    <span>Interés Periódico: </span><input class='interest'> %
+                    <span>Interés Periódico: </span><input class='interest' value=''> %
+                </li>
+                <li>
+                    <a class='reload' href="#">reload</a>
                 </li>
             </ul>
             <br>
-            <input class='send' type="submit" value="Submit">
+            <a href="#" class='send' value="Submit">send</a>
         </form>
     </section>
 </body>
@@ -105,12 +108,8 @@
 
             function calculate(period) {
                 if(period) {
-                    years_period = $( ".years_period" ).val();
-                    console.log(years_period)
+                    years_period = $( ".years_period_data" ).val();
                 }
-            }
-            
-            $( ".send" ).click(function() {
                 name = $( ".name" ).val();
                 identifier = $( ".identifier" ).val();
                 term = $( ".term" ).val();
@@ -119,13 +118,41 @@
                 nominal = $( ".nominal" ).val();
                 interest = $( ".interest" ).val();
                 periodicity = $( ".periodicity" ).val();
-                period = $( ".period" ).is(':checked');
-                calculate(period)
+                period = period;
+                $(".nominal")[0].value = "Johnny Bravo";
+                $(".interest")[0].value = "Johnny Bravo";
+            }
+
+            $('.send').click(function () {
+                calculate($( ".period" ).is(':checked'));
+             return false;
             });
 
-            $( ".period" ).click(function() {
-                $('.years_period').fadeToggle();
+            $('.period' ).click(function() {
+                $('.years_period, .years_period_data').fadeToggle();
             });
+
+
+            $('.reload' ).click(function() {
+                $('.cash, .interest, .nominal').prop('disabled', false)
+                $('.cash')[0].value = 0;
+                $('.interest')[0].value = 0;
+                $('.nominal')[0].value = 0;
+            });
+
+
+            $('.cash').focus(function (){
+                $('.nominal, .interest').prop('disabled', true);       
+            });
+
+            $('.nominal').focus(function (){
+                $('.cash, .interest').prop('disabled', true);       
+            });
+
+            $('.interest').focus(function (){
+                $('.nominal, .cash').prop('disabled', true);       
+            });
+
         });
     </script>
 </html>
