@@ -2,8 +2,29 @@
 <html>
 <head>
     <title>Credit</title>
-    <link rel="stylesheet" href="css/styles.css">
-    <script type="text/javascript" src="js/jquery-3.2.1.min.js"></script>
+    <style type="text/css">
+        .header {
+            display: inline-block;  
+        }
+
+        .logo, .business {
+            display: inline-block;  
+        }
+
+        ul.data, .answer-data {
+            display: inline-block;  
+        }
+
+        ul {
+            list-style: none;   
+        }
+
+        span {
+            display: inline-block;
+            width: 120px;
+        }
+    </style>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   </head>
 <body>
     <section class='header'>
@@ -74,5 +95,37 @@
     </section>
 </body>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-price-format/2.1/jquery.priceformat.min.js"></script>
-    <script type="text/javascript" src='js/script.js'></script>
+    <script type="text/javascript">
+        jQuery(document).ready(function($){
+            $('.cash, .nominal, .interest, .amount').priceFormat({
+              prefix: '',
+              centsSeparator: ',',
+              thousandsSeparator: '.',
+            });
+
+            function calculate(period) {
+                if(period) {
+                    years_period = $( ".years_period" ).val();
+                    console.log(years_period)
+                }
+            }
+            
+            $( ".send" ).click(function() {
+                name = $( ".name" ).val();
+                identifier = $( ".identifier" ).val();
+                term = $( ".term" ).val();
+                amount = $( ".amount" ).val();
+                cash = $( ".cash" ).val();
+                nominal = $( ".nominal" ).val();
+                interest = $( ".interest" ).val();
+                periodicity = $( ".periodicity" ).val();
+                period = $( ".period" ).is(':checked');
+                calculate(period)
+            });
+
+            $( ".period" ).click(function() {
+                $('.years_period').fadeToggle();
+            });
+        });
+    </script>
 </html>
