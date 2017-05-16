@@ -1,0 +1,20 @@
+.header {
+    display: inline-block;  
+}
+
+.logo, .business {
+    display: inline-block;  
+}
+
+ul.data, .answer-data {
+    display: inline-block;  
+}
+
+ul {
+    list-style: none;   
+}
+
+span {
+    display: inline-block;
+    width: 120px;
+}

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Credit</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <script type="text/javascript" src="js/jquery-3.2.1.min.js"></script>
+  </head>
+<body>
+    <section class='header'>
+        <div class='logo'>
+            <img src="https://s-media-cache-ak0.pinimg.com/originals/40/a4/c9/40a4c969f24ad0cd0dbf2de7b3c1837f.gif">
+        </div>
+        <div class='business'>Creditin</div>
+    </section>
+    <section class='polls'>
+        <form>
+            <ul class='data'>
+                <li>
+                    <span>Nombre:</span><input type="text" class='name'>
+                </li>    
+                <li>
+                    <span>ID</span><input type="number" class='identifier'>
+                </li>
+                <br>
+                <li>
+                    <span>Monto: COP $</span><input class='amount'>
+                </li>
+                <li>
+                    <span>Plazo en años</span>
+                    <select class='term'>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                        <option value="7">7</option>
+                        <option value="8">8</option>
+                        <option value="9">9</option>
+                        <option value="10">10</option>
+                    </select>
+                </li>
+                <li>
+                    <span>Periocidad</span>
+                    <select class='periodicity'>
+                        <option value="12">Mensual</option>
+                        <option value="6">Bimestral</option>
+                        <option value="4">Trimestral</option>
+                        <option value="2">Semestral</option>
+                    </select>
+                </li>
+                <li>
+                    <span>Periodo de gracia</span><input type="checkbox" class='period' value='period'>
+                </li>
+                <li>
+                    <span class='years_period' style="display: none">Plazo (en años)</span>
+                    <select class='years_period' style="display: none">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                    </select>
+                </li>
+            </ul>
+            <ul class='answer-data'>
+                <li>
+                    <span>Efectivo Anual: </span><input class='cash'> %
+                </li>
+                <li>
+                    <span>Nominal Anual: </span><input class='nominal'> %
+                </li>
+                <li>
+                    <span>Interés Periódico: </span><input class='interest'> %
+                </li>
+            </ul>
+            <br>
+            <input class='send' type="submit" value="Submit">
+        </form>
+    </section>
+</body>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-price-format/2.1/jquery.priceformat.min.js"></script>
+    <script type="text/javascript" src='js/script.js'></script>
+</html>
