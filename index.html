@@ -1,27 +1,92 @@
 <!DOCTYPE html>
 <html>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 <head>
     <title>Credit</title>
     <style type="text/css">
+
         .header {
-            display: inline-block;  
+            width: 100%;
+            background-color: #062707;
+        }
+        body {  
+            margin: 0px;
+        }
+        .polls {
+            font-family: sans-serif;   
+        }
+
+        form {
+            text-align: center;   
+        }
+
+        hr {
+            width: 80%
+        }
+
+        li {
+            text-align: left;   
         }
 
         .logo, .business {
             display: inline-block;  
         }
 
+        .logo img {
+            width: 250px;  
+        }
+
+        .btn {
+            text-align: center;
+            margin-top: 20px;   
+            background-color: #5aa658;
+            color: white;
+            width: 200px;
+            margin: 0 auto;
+            padding: 10px;
+        }
+        a {   
+            color: white;
+            text-decoration: none;
+        }
+        
+        .reload {   
+            padding: 1px;
+            width: 60px;
+            margin-bottom: 5px;
+        }
+        
+        .personal-data {
+            margin-bottom: 40px;
+        }
+
         ul.data, .answer-data {
-            display: inline-block;  
+            display: inline-block;
+            margin-left: 40px;  
+            min-width: 260px;
         }
 
         ul {
-            list-style: none;   
+            list-style: none;
+            padding-left: 0px;   
         }
 
         span {
             display: inline-block;
-            width: 120px;
+            width: 150px;
+        }
+        @media (max-width: 600px) {
+            li input {
+                width: 100px;
+            }
+
+            span {
+                width: 126px;
+            }
+
+            ul.data, .answer-data {
+                margin-left: 0px;
+            }
         }
     </style>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
@@ -29,20 +94,23 @@
 <body>
     <section class='header'>
         <div class='logo'>
-            <img src="https://s-media-cache-ak0.pinimg.com/originals/40/a4/c9/40a4c969f24ad0cd0dbf2de7b3c1837f.gif">
+            <img src="http://www.credito-veloz.com/wp-content/uploads/2015/05/logo-cveloz3.png">
         </div>
-        <div class='business'>Creditin</div>
+        <!-- <div class='business'>Titulo Credito</div> -->
     </section>
     <section class='polls'>
         <form class="form-data">
             <ul class='data'>
                 <li>
-                    <span>Nombre:</span><input type="text" class='name' value=''>
-                </li>    
+                    <span>Nombre:</span><input type="text" class='name' value=''>  
+                </li>
                 <li>
                     <span>ID</span><input type="number" class='identifier'>
                 </li>
-                <br>
+            </ul>
+            <br>
+            <hr>
+            <ul class='data'>
                 <li>
                     <span>Monto: COP $</span><input class='amount'>
                 </li>
@@ -79,6 +147,9 @@
                 </li>
             </ul>
             <ul class='answer-data'>
+                <a href="#">
+                    <div class="btn reload">reload</div>
+                </a>
                 <li>
                     <span>Efectivo Anual: </span><input class='cash' value=''> %
                 </li>
@@ -88,12 +159,12 @@
                 <li>
                     <span>Interés Periódico: </span><input class='interest' value=''> %
                 </li>
-                <li>
-                    <a class='reload' href="#">reload</a>
-                </li>
             </ul>
             <br>
-            <a href="#" class='send' value="Submit">send</a>
+                <a href="#" class='send' value="Submit">
+                    <div class="btn">send</div>
+                </a>
+            
         </form>
     </section>
 </body>
