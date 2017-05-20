@@ -171,12 +171,12 @@
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-price-format/2.1/jquery.priceformat.min.js"></script>
     <script type="text/javascript">
         jQuery(document).ready(function($){
-            $('.cash, .nominal, .interest, .amount').priceFormat({
+/*            $('.cash, .nominal, .interest, .amount').priceFormat({
               prefix: '',
               centsSeparator: ',',
               thousandsSeparator: '.',
             });
-
+*/
             function calculate(period) {
                 if(period) {
                     years_period = $( ".years_period_data" ).val();
@@ -191,11 +191,19 @@
                 periodicity = $( ".periodicity" ).val();
                 period = period;
                 $(".nominal")[0].value = "Johnny Bravo";
-                $(".interest")[0].value = "Johnny Bravo";
             }
-
+                
+            function calculate_cash() {
+                percentage = parseFloat(interest) / 100
+                result = Math.pow((1 + percentage), ((360 / (parseInt(periodicity) * 30)))) -1 ;
+                $(".cash")[0].value = result * 100; 
+            }       
+            
             $('.send').click(function () {
                 calculate($( ".period" ).is(':checked'));
+                if (!$( ".interest" ).val() == '') {
+                    calculate_cash();
+                }
              return false;
             });
 
@@ -221,7 +229,7 @@
             });
 
             $('.interest').focus(function (){
-                $('.nominal, .cash').prop('disabled', true);       
+                $('.nominal, .cash').prop('disabled', true);    
             });
 
         });
