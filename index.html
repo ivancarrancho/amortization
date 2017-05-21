@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.15/css/dataTables.jqueryui.min.css">
 <head>
     <title>Credit</title>
     <style type="text/css">
@@ -32,15 +33,22 @@
         .btn {
             text-align: center;
             margin-top: 20px;   
-            background-color: #5aa658;
+            background-color: #062707;
             color: white;
             width: 200px;
             margin: 0 auto;
             padding: 10px;
         }
+
         a {   
             color: white;
             text-decoration: none;
+        }
+
+        section.table {   
+        }
+        .error {   
+            color: red;
         }
         
         .reload {   
@@ -147,18 +155,60 @@
                 <li>
                     <span>Interés Periódico: </span><input class='interest' value=''> %
                 </li>
+                <li>
+                    <span class="error"></span>   
+                </li>
             </ul>
             <br>
                 <a href="#" class='send' value="Submit">
-                    <div class="btn">send</div>
+                    <div class="btn">Calcular</div>
                 </a>
             
         </form>
     </section>
+    <section class='table'>
+    <div>TAble</div>
+    <table id='data_table' class="display" cellspacing="0" width="100%">
+        <thead>
+            <tr>
+                <th>Cuota</th>
+                <th>Fecha</th>
+                <th>Saldo</th>
+                <th>Amort Cap</th>
+                <th>Amort Int</th>
+                <th>Cuota Fija</th>
+                <th>Flujo de caja</th>
+            </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>324</td>
+            <td>3</td>
+            <td>324</td>
+            <td>234</td>
+            <td>234</td>
+            <td>3</td>
+            <td>342</td>
+        </tr>
+        <tr>
+            <td>eqw</td>
+            <td>2343</td>
+            <td>32</td>
+            <td>4gff</td>
+            <td>cvbcvb</td>
+            <td>234</td>
+            <td>34</td>
+        </tr>
+        </tbody>
+    </table>
+
+    </section>
 </body>
+    <script type="text/javascript" charset="utf8" src="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.15/js/jquery.dataTables.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-price-format/2.1/jquery.priceformat.min.js"></script>
     <script type="text/javascript">
         jQuery(document).ready(function($){
+            $('#data_table').DataTable();
             $('.amount').priceFormat({
               prefix: '',
               centsSeparator: '.',
@@ -180,36 +230,51 @@
             }
                 
             function calculate_cash() {
-                percentage = parseFloat(cash) / 100
-                result = Math.pow((1 + percentage), ((360 / (parseInt(periodicity))) / 360 )) -1 ;
-                $(".nominal")[0].value = result * 100 *2; 
-            }       
-                            
-            function calculate_nominal() {
                 percentage = parseFloat(interest) / 100
                 result = Math.pow((1 + percentage), ((360 / (360 / (parseInt(periodicity)))))) -1 ;
-                $(".cash")[0].value = result * 100; 
+                $(".cash")[0].value = (result * 100).toFixed(2); 
+
+                result = percentage * parseInt(periodicity)
+                $(".nominal")[0].value = (result * 100).toFixed(2);
             }    
-			
-            function calculate_period() {
+                            
+            function calculate_nominal() {
+                percentage = parseFloat(cash) / 100
+                result = Math.pow((1 + percentage), ((360 / (parseInt(periodicity))) / 360 )) -1 ;
+                $(".interest")[0].value = (result * 100).toFixed(2);
+
+                $(".nominal")[0].value = (result * 100 * parseInt(periodicity)).toFixed(2);
+            }       
+            
+            function calculate_interest() {
                 percentage = parseFloat(nominal) / 100
-				result = percentage / (parseInt(periodicity))
-				$(".interest")[0].value = result * 100; 
+                result = percentage / (parseInt(periodicity))
+                interest_result = (result * 100).toFixed(2)
+                $(".interest")[0].value = interest_result;
+
+                percentage = parseFloat(interest_result) / 100
+                result = Math.pow((1 + percentage), ((360 / (360 / (parseInt(periodicity)))))) -1 ;
+                $(".cash")[0].value = (result * 100).toFixed(2); 
             }       
                         
             $('.send').click(function () {
                 calculate($( ".period" ).is(':checked'));
-                
-                if (!$( ".cash" ).val() == '') {
+                if ($( ".cash" ).val() != '') {
+                    $('.send .btn').fadeTo("slow", 0.8).text('OK');
                     calculate_nominal();
                 }
-                if (!$( ".period" ).val() == '') {
+                else if ($( ".nominal" ).val() != '') {
+                    $('.send .btn').fadeTo("slow", 0.8).text('OK');
+                    calculate_interest();
+                }
+                else if ($( ".interest" ).val() != '') {
+                    $('.send .btn').fadeTo("slow", 0.8).text('OK');
                     calculate_cash();
                 }
-				
-				if (!$( ".nominal" ).val() == '') {
-                    calculate_period();
+                else {
+                    $('.error').text('Ingrese un dato');
                 }
+                
              return false;
             });
             $('.period' ).click(function() {
@@ -217,9 +282,9 @@
             });
             $('.reload' ).click(function() {
                 $('.cash, .interest, .nominal').prop('disabled', false)
-                $('.cash')[0].value = 0;
-                $('.interest')[0].value = 0;
-                $('.nominal')[0].value = 0;
+                $('.cash')[0].value = '';
+                $('.interest')[0].value = '';
+                $('.nominal')[0].value = '';
             });
             $('.cash').focus(function (){
                 $('.nominal, .interest').prop('disabled', true);       
