@@ -9,27 +9,44 @@
             width: 100%;
             background-color: #062707;
         }
+
         body {  
             margin: 0px;
         }
-        .polls {
+
+        .polls, .table {
             font-family: sans-serif;   
         }
+
         form {
             text-align: center;   
         }
+
         hr {
             width: 80%
         }
+
+        h2 {
+            text-align: center;
+        }
+
         li {
             text-align: left;   
         }
+
+        .table {
+            width: 90%;
+            margin: 0 auto;
+        }
+
         .logo, .business {
             display: inline-block;  
         }
+
         .logo img {
             width: 250px;  
         }
+
         .btn {
             text-align: center;
             margin-top: 20px;   
@@ -47,6 +64,7 @@
 
         section.table {   
         }
+
         .error {   
             color: red;
         }
@@ -60,26 +78,32 @@
         .personal-data {
             margin-bottom: 40px;
         }
+
         ul.data, .answer-data {
             display: inline-block;
             margin-left: 40px;  
             min-width: 260px;
         }
+
         ul {
             list-style: none;
             padding-left: 0px;   
         }
+
         span {
             display: inline-block;
             width: 150px;
         }
+
         @media (max-width: 600px) {
             li input {
                 width: 100px;
             }
+
             span {
                 width: 126px;
             }
+
             ul.data, .answer-data {
                 margin-left: 0px;
             }
@@ -95,6 +119,8 @@
         <!-- <div class='business'>Titulo Credito</div> -->
     </section>
     <section class='polls'>
+        <h2>Calculo de crédito</h2>
+        <hr>
         <form class="form-data">
             <ul class='data'>
                 <li>
@@ -167,40 +193,36 @@
         </form>
     </section>
     <section class='table'>
-    <div>TAble</div>
-    <table id='data_table' class="display" cellspacing="0" width="100%">
-        <thead>
-            <tr>
-                <th>Cuota</th>
-                <th>Fecha</th>
-                <th>Saldo</th>
-                <th>Amort Cap</th>
-                <th>Amort Int</th>
-                <th>Cuota Fija</th>
-                <th>Flujo de caja</th>
-            </tr>
-        </thead>
-        <tbody>
-        <tr>
-            <td>324</td>
-            <td>3</td>
-            <td>324</td>
-            <td>234</td>
-            <td>234</td>
-            <td>3</td>
-            <td>342</td>
-        </tr>
-        <tr>
-            <td>eqw</td>
-            <td>2343</td>
-            <td>32</td>
-            <td>4gff</td>
-            <td>cvbcvb</td>
-            <td>234</td>
-            <td>34</td>
-        </tr>
-        </tbody>
-    </table>
+        <h2>Tabla de amortización</h2>
+        <hr>
+        <a href="#">
+            <div class="btn generate_table">Generar tabla</div>
+        </a>
+        <table id='data_table' class="display" cellspacing="0" width="100%">
+            <thead>
+                <tr>
+                    <th>Cuota</th>
+                    <th>Fecha</th>
+                    <th>Saldo</th>
+                    <th>Amort Cap</th>
+                    <th>Amort Int</th>
+                    <th>Cuota Fija</th>
+                    <th>Flujo de caja</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+
+            </tbody>
+        </table>
 
     </section>
 </body>
@@ -209,24 +231,22 @@
     <script type="text/javascript">
         jQuery(document).ready(function($){
             $('#data_table').DataTable();
-            $('.amount').priceFormat({
-              prefix: '',
-              centsSeparator: '.',
-              thousandsSeparator: '.',
-            });
             function calculate(period) {
                 if(period) {
                     years_period = $( ".years_period_data" ).val();
+                } else {
+                    years_period = false;
                 }
+
                 name = $( ".name" ).val();
                 identifier = $( ".identifier" ).val();
+                amount = parseInt($( ".amount" ).val());
                 term = $( ".term" ).val();
-                amount = $( ".amount" ).val();
+                periodicity = $( ".periodicity" ).val();
+                period = period;
                 cash = $( ".cash" ).val();
                 nominal = $( ".nominal" ).val();
                 interest = $( ".interest" ).val();
-                periodicity = $( ".periodicity" ).val();
-                period = period;
             }
                 
             function calculate_cash() {
@@ -256,7 +276,58 @@
                 result = Math.pow((1 + percentage), ((360 / (360 / (parseInt(periodicity)))))) -1 ;
                 $(".cash")[0].value = (result * 100).toFixed(2); 
             }       
-                        
+            
+            function calc_days(year, month, day) {
+            }
+
+            function generate_table(load_cash, load_nominal, load_interest) {
+                dues = term * periodicity
+                var year = 2017;
+                var month = 0;
+                var day = 1;
+
+                if (years_period) {
+                    n = (periodicity * term) - years_period
+                    
+                } else {
+                    n = periodicity * term
+                }
+                fixed_due = 0 
+                for (due_id = 0; due_id <= dues; due_id++) {                  
+                    month_sumatory = (360) / (30 * $( ".periodicity" ).val()); 
+                    month = month + month_sumatory
+                    date = year + '-' + month + '-' + day ;
+
+                    if (
+                        $( ".periodicity" ).val() == 12 || 
+                        $( ".periodicity" ).val() == 6 ||
+                        $( ".periodicity" ).val() == 4 ||
+                        $( ".periodicity" ).val() == 2
+                    ) {
+                        if (month == 12) {
+                            month = 0
+                            year++                            
+                        }
+                    }
+
+                    amort_interest = amount * (load_interest / 100) /* P * It */
+                    
+                    A = amount * ( (Math.pow((1 + (load_interest / 100)), n) * (load_interest / 100) )/( Math.pow((1 + (load_interest / 100)), n) -1 ))
+
+                    if (fixed_due == 0) {
+                        fixed_due = A
+                    } 
+
+                    amort_cap = A - amort_interest
+                    
+                    $('tbody').append(
+                        "<tr><td>" + due_id + "</td><td>" + date + "</td><td>" + amount.toFixed(2) + "</td><td>" + amort_cap.toFixed(2) + "</td><td>" + amort_interest.toFixed(2) + "</td><td>" + fixed_due.toFixed(2) + "</td><td>34</td></tr>"
+                    );
+                    amount = amount - amort_cap
+                }
+
+            } 
+
             $('.send').click(function () {
                 calculate($( ".period" ).is(':checked'));
                 if ($( ".cash" ).val() != '') {
@@ -274,24 +345,34 @@
                 else {
                     $('.error').text('Ingrese un dato');
                 }
-                
+
+                load_cash = $( ".cash" ).val();
+                load_nominal = $( ".nominal" ).val();
+                load_interest = $( ".interest" ).val();
+                generate_table(load_cash, load_nominal, load_interest)
+
              return false;
             });
+
             $('.period' ).click(function() {
                 $('.years_period, .years_period_data').fadeToggle();
             });
+
             $('.reload' ).click(function() {
                 $('.cash, .interest, .nominal').prop('disabled', false)
                 $('.cash')[0].value = '';
                 $('.interest')[0].value = '';
                 $('.nominal')[0].value = '';
             });
+
             $('.cash').focus(function (){
                 $('.nominal, .interest').prop('disabled', true);       
             });
+
             $('.nominal').focus(function (){
                 $('.cash, .interest').prop('disabled', true);       
             });
+
             $('.interest').focus(function (){
                 $('.nominal, .cash').prop('disabled', true);    
             });
