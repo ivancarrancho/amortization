@@ -160,8 +160,8 @@
                     <span>Periodo de gracia</span><input type="checkbox" class='period' value='period'>
                 </li>
                 <li>
-                    <span class='years_period' style="display: none">Plazo (en años)</span>
-                    <select class='years_period_data' style="display: none">
+                    <span class='grace_period' style="display: none">Plazo (en meses)</span>
+                    <select class='grace_period_data' style="display: none">
                         <option value="1">1</option>
                         <option value="2">2</option>
                         <option value="3">3</option>
@@ -233,9 +233,9 @@
             $('#data_table').DataTable();
             function calculate(period) {
                 if(period) {
-                    years_period = $( ".years_period_data" ).val();
+                    grace_period = $( ".grace_period_data" ).val();
                 } else {
-                    years_period = false;
+                    grace_period = false;
                 }
 
                 name = $( ".name" ).val();
@@ -286,13 +286,14 @@
                 var month = 0;
                 var day = 1;
 
-                if (years_period) {
-                    n = (periodicity * term) - years_period
+                if (grace_period) {
+                    n = (periodicity * term) - grace_period
                     
                 } else {
                     n = periodicity * term
                 }
                 fixed_due = 0 
+                amort_interest = 0
                 for (due_id = 0; due_id <= dues; due_id++) {                  
                     month_sumatory = (360) / (30 * $( ".periodicity" ).val()); 
                     month = month + month_sumatory
@@ -310,20 +311,27 @@
                         }
                     }
 
-                    amort_interest = amount * (load_interest / 100) /* P * It */
                     
                     A = amount * ( (Math.pow((1 + (load_interest / 100)), n) * (load_interest / 100) )/( Math.pow((1 + (load_interest / 100)), n) -1 ))
 
-                    if (fixed_due == 0) {
-                        fixed_due = A
-                    } 
 
-                    amort_cap = A - amort_interest
+                    if ((due_id - 1) >= grace_period ) {
+                        amort_cap = A - amort_interest
+                        if (fixed_due == 0) {
+                            fixed_due = A
+                        }
+                        
+                    } else {
+                        amort_cap = 0
+                    }
+
+                    amount = amount - amort_cap
                     
                     $('tbody').append(
                         "<tr><td>" + due_id + "</td><td>" + date + "</td><td>" + amount.toFixed(2) + "</td><td>" + amort_cap.toFixed(2) + "</td><td>" + amort_interest.toFixed(2) + "</td><td>" + fixed_due.toFixed(2) + "</td><td>34</td></tr>"
                     );
-                    amount = amount - amort_cap
+                    
+                    amort_interest = amount * (load_interest / 100) /* P * It */
                 }
 
             } 
@@ -355,7 +363,7 @@
             });
 
             $('.period' ).click(function() {
-                $('.years_period, .years_period_data').fadeToggle();
+                $('.grace_period, .grace_period_data').fadeToggle();
             });
 
             $('.reload' ).click(function() {
