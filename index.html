@@ -47,6 +47,16 @@
             width: 250px;  
         }
 
+        .hide {
+            display: none
+        }
+
+        a.print .btn {
+            margin: 0px 65%;
+            width: 60px;
+            background-color: #0d464e;
+        }
+
         .btn {
             text-align: center;
             margin-top: 20px;   
@@ -119,22 +129,25 @@
         <!-- <div class='business'>Titulo Credito</div> -->
     </section>
     <section class='polls'>
-        <h2>Calculo de crédito</h2>
+        <h2 class='hide-title'>Calculo de crédito</h2>
+        <a href="#" class='print hide'>
+            <div class="btn">Imprimir</div>
+        </a>
         <hr>
         <form class="form-data">
             <ul class='data'>
                 <li>
-                    <span>Nombre:</span><input type="text" class='name' value=''>  
+                    <span>Nombre:</span><input type="text" class='name' value='da mangueira'>  
                 </li>
                 <li>
-                    <span>ID</span><input type="number" class='identifier'>
+                    <span>ID</span><input type="number" class='identifier' value='666'>
                 </li>
             </ul>
             <br>
             <hr>
             <ul class='data'>
                 <li>
-                    <span>Monto: COP $</span><input class='amount'>
+                    <span>Monto: COP $</span><input class='amount' value='70000000'>
                 </li>
                 <li>
                     <span>Plazo en años</span>
@@ -173,7 +186,7 @@
                     <div class="btn reload">reload</div>
                 </a>
                 <li>
-                    <span>Efectivo Anual: </span><input class='cash' value=''> %
+                    <span>Efectivo Anual: </span><input class='cash' value='25'> %
                 </li>
                 <li>
                     <span>Nominal Anual: </span><input class='nominal' value=''> %
@@ -195,9 +208,9 @@
     <section class='table'>
         <h2>Tabla de amortización</h2>
         <hr>
-        <a href="#">
+<!--         <a href="#">
             <div class="btn generate_table">Generar tabla</div>
-        </a>
+        </a> -->
         <table id='data_table' class="display" cellspacing="0" width="100%">
             <thead>
                 <tr>
@@ -230,7 +243,7 @@
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-price-format/2.1/jquery.priceformat.min.js"></script>
     <script type="text/javascript">
         jQuery(document).ready(function($){
-            $('#data_table').DataTable();
+            $('#data_table').DataTable({bFilter: false, bInfo: false});
             function calculate(period) {
                 if(period) {
                     grace_period = $( ".grace_period_data" ).val();
@@ -297,7 +310,7 @@
                 for (due_id = 0; due_id <= dues; due_id++) {                  
                     month_sumatory = (360) / (30 * $( ".periodicity" ).val()); 
                     month = month + month_sumatory
-                    date = year + '-' + month + '-' + day ;
+                    date = year + '/' + month + '/' + day ;
 
                     if (
                         $( ".periodicity" ).val() == 12 || 
@@ -333,6 +346,8 @@
                     
                     amort_interest = amount * (load_interest / 100) /* P * It */
                 }
+                $('.hide-title').text('Calculo de crédito de ' + name + ' c.c ' + identifier.toString());
+                $('.print').removeClass('hide');
 
             } 
 
@@ -383,6 +398,10 @@
 
             $('.interest').focus(function (){
                 $('.nominal, .cash').prop('disabled', true);    
+            });
+
+            $('.print').click(function () {
+                print()
             });
         });
     </script>
