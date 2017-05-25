@@ -202,10 +202,11 @@
                 <a href="#" class='send' value="Submit">
                     <div class="btn">Calcular</div>
                 </a>
-            
+            <br>
+            <br>
         </form>
     </section>
-    <section class='table'>
+    <section class='table hide'>
         <h2>Tabla de amortización</h2>
         <hr>
 <!--         <a href="#">
@@ -243,7 +244,14 @@
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-price-format/2.1/jquery.priceformat.min.js"></script>
     <script type="text/javascript">
         jQuery(document).ready(function($){
-            $('#data_table').DataTable({bFilter: false, bInfo: false});
+            $('#data_table').DataTable({
+                bFilter: false, 
+                bInfo: false, 
+                "bJQueryUI":true,
+                "bSort":false,
+                "bPaginate":true,
+                "sPaginationType":"full_numbers",
+            });
             function calculate(period) {
                 if(period) {
                     grace_period = $( ".grace_period_data" ).val();
@@ -294,6 +302,7 @@
             }
 
             function generate_table(load_cash, load_nominal, load_interest) {
+                $('.table').removeClass('hide');
                 dues = term * periodicity
                 var year = 2017;
                 var month = 0;
