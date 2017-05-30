@@ -30,6 +30,10 @@
             text-align: center;
         }
 
+        input:disabled, textarea:disabled {
+            background-color: #cbead2;
+        }
+
         li {
             text-align: left;   
         }
@@ -66,6 +70,11 @@
             margin: 0 auto;
             padding: 10px;
         }
+        
+        .calc_btn {
+            margin: 0 auto;
+            width: 222px;
+        }
 
         a {   
             color: white;
@@ -80,11 +89,19 @@
         }
         
         .reload {   
-            padding: 1px;
-            width: 60px;
+            padding: 5px;
+            width: 65px;
             margin-bottom: 5px;
+            display: inline-block;
         }
         
+        .reload_page {   
+            padding: 10px;
+            width: 160px;
+            margin-bottom: 5px;
+            display: inline-block;
+        }
+
         .personal-data {
             margin-bottom: 40px;
         }
@@ -137,21 +154,24 @@
         <form class="form-data">
             <ul class='data'>
                 <li>
-                    <span>Nombre:</span><input type="text" class='name' value='da mangueira'>  
+                    <span>Nombre:</span><input type="text" class='name' value=''>
                 </li>
                 <li>
-                    <span>ID</span><input type="number" class='identifier' value='666'>
+                    <span>ID</span><input type="number" class='identifier' value=''>
                 </li>
             </ul>
             <br>
             <hr>
             <ul class='data'>
                 <li>
-                    <span>Monto: COP $</span><input class='amount' value='70000000'>
+                    <span>Monto: COP $</span><input class='amount' value=''>
                 </li>
                 <li>
                     <span>Plazo en años</span>
                     <select class='term'>
+<!--                         <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option> -->
                         <option value="5">5</option>
                         <option value="6">6</option>
                         <option value="7">7</option>
@@ -173,7 +193,7 @@
                     <span>Periodo de gracia</span><input type="checkbox" class='period' value='period'>
                 </li>
                 <li>
-                    <span class='grace_period' style="display: none">Plazo (en meses)</span>
+                    <span class='grace_period' style="display: none">Plazo (en años)</span>
                     <select class='grace_period_data' style="display: none">
                         <option value="1">1</option>
                         <option value="2">2</option>
@@ -183,10 +203,10 @@
             </ul>
             <ul class='answer-data'>
                 <a href="#">
-                    <div class="btn reload">reload</div>
+                    <div class="btn reload">Recargar</div>
                 </a>
                 <li>
-                    <span>Efectivo Anual: </span><input class='cash' value='25'> %
+                    <span>Efectivo Anual: </span><input class='cash' value=''> %
                 </li>
                 <li>
                     <span>Nominal Anual: </span><input class='nominal' value=''> %
@@ -199,8 +219,14 @@
                 </li>
             </ul>
             <br>
-                <a href="#" class='send' value="Submit">
-                    <div class="btn">Calcular</div>
+                <div class="calc_btn">
+                    <a href="#" class='send' value="Submit">
+                        <div class="btn">Calcular</div>
+                    </a>
+                </div>
+                <br>
+                <a href="#">
+                    <div class="btn reload_page">Recargar - tabla</div>
                 </a>
             <br>
             <br>
@@ -251,7 +277,15 @@
                 "bSort":false,
                 "bPaginate":true,
                 "sPaginationType":"full_numbers",
+                "lengthChange": false
             });
+
+            $('.amount').priceFormat({
+               prefix: '',
+               centsSeparator: ',',
+               thousandsSeparator: '.',
+             });
+
             function calculate(period) {
                 if(period) {
                     grace_period = $( ".grace_period_data" ).val();
@@ -261,7 +295,7 @@
 
                 name = $( ".name" ).val();
                 identifier = $( ".identifier" ).val();
-                amount = parseInt($( ".amount" ).val());
+                amount = parseInt($( ".amount" ).val().replace(/\./g, ''));
                 term = $( ".term" ).val();
                 periodicity = $( ".periodicity" ).val();
                 period = period;
@@ -308,7 +342,11 @@
                 var month = 0;
                 var day = 1;
 
+                //plazo == term  
+                //dues == cuotas 
+
                 if (grace_period) {
+                    grace_period = grace_period * periodicity
                     n = (periodicity * term) - grace_period
                     
                 } else {
@@ -316,11 +354,14 @@
                 }
                 fixed_due = 0 
                 amort_interest = 0
+                total = amount.toFixed(2) 
+
+                A = amount * ( (Math.pow((1 + (load_interest / 100)), n) * (load_interest / 100) )/( Math.pow((1 + (load_interest / 100)), n) -1 ))
+                
                 for (due_id = 0; due_id <= dues; due_id++) {                  
                     month_sumatory = (360) / (30 * $( ".periodicity" ).val()); 
                     month = month + month_sumatory
                     date = year + '/' + month + '/' + day ;
-
                     if (
                         $( ".periodicity" ).val() == 12 || 
                         $( ".periodicity" ).val() == 6 ||
@@ -333,28 +374,33 @@
                         }
                     }
 
-                    
-                    A = amount * ( (Math.pow((1 + (load_interest / 100)), n) * (load_interest / 100) )/( Math.pow((1 + (load_interest / 100)), n) -1 ))
-
 
                     if ((due_id - 1) >= grace_period ) {
                         amort_cap = A - amort_interest
                         if (fixed_due == 0) {
                             fixed_due = A
+                        }                    
+                        if (A != 0) {
+                            total = '-' + A.toFixed(2).toString()
                         }
-                        
                     } else {
                         amort_cap = 0
+                        if (!due_id == 0){
+                            total = '-' + amort_interest.toFixed(2).toString()
+                        }
                     }
 
                     amount = amount - amort_cap
                     
+                    
+
                     $('tbody').append(
-                        "<tr><td>" + due_id + "</td><td>" + date + "</td><td>" + amount.toFixed(2) + "</td><td>" + amort_cap.toFixed(2) + "</td><td>" + amort_interest.toFixed(2) + "</td><td>" + fixed_due.toFixed(2) + "</td><td>34</td></tr>"
+                        "<tr><td>" + due_id + "</td><td>" + date + "</td><td>" + amount.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,') + "</td><td>" + amort_cap.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,') + "</td><td>" + amort_interest.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,') + "</td><td>" + fixed_due.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,') + "</td><td>" + total.replace(/(\d)(?=(\d{3})+\.)/g, '$1,') + "</td></tr>"
                     );
                     
                     amort_interest = amount * (load_interest / 100) /* P * It */
                 }
+                console.log(amount)
                 $('.hide-title').text('Calculo de crédito de ' + name + ' c.c ' + identifier.toString());
                 $('.print').removeClass('hide');
 
@@ -388,6 +434,9 @@
 
             $('.period' ).click(function() {
                 $('.grace_period, .grace_period_data').fadeToggle();
+            });
+            $('.reload_page' ).click(function() {
+                location.reload();
             });
 
             $('.reload' ).click(function() {
