@@ -10,16 +10,16 @@
             background-color: #062707;
         }
 
-        body {  
+        body {
             margin: 0px;
         }
 
         .polls, .table {
-            font-family: sans-serif;   
+            font-family: sans-serif;
         }
 
         form {
-            text-align: center;   
+            text-align: center;
         }
 
         hr {
@@ -38,7 +38,7 @@
         }
 
         li {
-            text-align: left;   
+            text-align: left;
         }
 
         .table {
@@ -47,11 +47,11 @@
         }
 
         .logo, .business {
-            display: inline-block;  
+            display: inline-block;
         }
 
         .logo img {
-            width: 250px;  
+            width: 250px;
         }
 
         .hide {
@@ -66,7 +66,7 @@
 
         .btn {
             text-align: center;
-            margin-top: 20px;   
+            margin-top: 20px;
             background-color: #062707;
             color: white;
             width: 200px;
@@ -79,26 +79,26 @@
             width: 222px;
         }
 
-        a {   
+        a {
             color: white;
             text-decoration: none;
         }
 
-        section.table {   
+        section.table {
         }
 
-        .error {   
+        .error {
             color: red;
         }
-        
-        .reload {   
+
+        .reload {
             padding: 5px;
             width: 65px;
             margin-bottom: 5px;
             display: inline-block;
         }
-        
-        .reload_page {   
+
+        .reload_page {
             padding: 10px;
             width: 160px;
             margin-bottom: 5px;
@@ -111,13 +111,13 @@
 
         ul.data, .answer-data {
             display: inline-block;
-            margin-left: 40px;  
+            margin-left: 40px;
             min-width: 260px;
         }
 
         ul {
             list-style: none;
-            padding-left: 0px;   
+            padding-left: 0px;
         }
 
         span {
@@ -167,7 +167,7 @@
             <hr>
             <ul class='data'>
                 <li>
-                    <span>Monto: COP $</span><input class='amount' value=''>
+                    <span>Monto: COP$</span><input class='amount' value=''>
                 </li>
                 <li>
                     <span>Plazo en años</span>
@@ -203,7 +203,7 @@
             </ul>
             <ul class='answer-data'>
                 <a href="#">
-                    <div class="btn reload">Recargar</div>
+                    <div class="btn reload">Recargar opciones</div>
                 </a>
                 <li>
                     <span>Efectivo Anual: </span><input class='cash' value=''> %
@@ -215,7 +215,7 @@
                     <span>Interés Periódico: </span><input class='interest' value=''> %
                 </li>
                 <li>
-                    <span class="error"></span>   
+                    <span class="error"></span>
                 </li>
             </ul>
             <br>
@@ -271,8 +271,8 @@
     <script type="text/javascript">
         jQuery(document).ready(function($){
             $('#data_table').DataTable({
-                bFilter: false, 
-                bInfo: false, 
+                bFilter: false,
+                bInfo: false,
                 "bJQueryUI":true,
                 "bSort":false,
                 "bPaginate":true,
@@ -303,24 +303,24 @@
                 nominal = $( ".nominal" ).val();
                 interest = $( ".interest" ).val();
             }
-                
+
             function calculate_cash() {
                 percentage = parseFloat(interest) / 100
                 result = Math.pow((1 + percentage), ((360 / (360 / (parseInt(periodicity)))))) -1 ;
-                $(".cash")[0].value = (result * 100).toFixed(2); 
+                $(".cash")[0].value = (result * 100).toFixed(2);
 
                 result = percentage * parseInt(periodicity)
                 $(".nominal")[0].value = (result * 100).toFixed(2);
-            }    
-                            
+            }
+
             function calculate_nominal() {
                 percentage = parseFloat(cash) / 100
                 result = Math.pow((1 + percentage), ((360 / (parseInt(periodicity))) / 360 )) -1 ;
                 $(".interest")[0].value = (result * 100).toFixed(2);
 
                 $(".nominal")[0].value = (result * 100 * parseInt(periodicity)).toFixed(2);
-            }       
-            
+            }
+
             function calculate_interest() {
                 percentage = parseFloat(nominal) / 100
                 result = percentage / (parseInt(periodicity))
@@ -329,9 +329,9 @@
 
                 percentage = parseFloat(interest_result) / 100
                 result = Math.pow((1 + percentage), ((360 / (360 / (parseInt(periodicity)))))) -1 ;
-                $(".cash")[0].value = (result * 100).toFixed(2); 
-            }       
-            
+                $(".cash")[0].value = (result * 100).toFixed(2);
+            }
+
             function calc_days(year, month, day) {
             }
 
@@ -342,35 +342,35 @@
                 var month = 0;
                 var day = 1;
 
-                //plazo == term  
-                //dues == cuotas 
+                //plazo == term
+                //dues == cuotas
 
                 if (grace_period) {
                     grace_period = grace_period * periodicity
                     n = (periodicity * term) - grace_period
-                    
+
                 } else {
                     n = periodicity * term
                 }
-                fixed_due = 0 
+                fixed_due = 0
                 amort_interest = 0
-                total = amount.toFixed(2) 
+                total = amount.toFixed(2)
 
                 A = amount * ( (Math.pow((1 + (load_interest / 100)), n) * (load_interest / 100) )/( Math.pow((1 + (load_interest / 100)), n) -1 ))
-                
-                for (due_id = 0; due_id <= dues; due_id++) {                  
-                    month_sumatory = (360) / (30 * $( ".periodicity" ).val()); 
+
+                for (due_id = 0; due_id <= dues; due_id++) {
+                    month_sumatory = (360) / (30 * $( ".periodicity" ).val());
                     month = month + month_sumatory
                     date = year + '/' + month + '/' + day ;
                     if (
-                        $( ".periodicity" ).val() == 12 || 
+                        $( ".periodicity" ).val() == 12 ||
                         $( ".periodicity" ).val() == 6 ||
                         $( ".periodicity" ).val() == 4 ||
                         $( ".periodicity" ).val() == 2
                     ) {
                         if (month == 12) {
                             month = 0
-                            year++                            
+                            year++
                         }
                     }
 
@@ -379,7 +379,7 @@
                         amort_cap = A - amort_interest
                         if (fixed_due == 0) {
                             fixed_due = A
-                        }                    
+                        }
                         if (A != 0) {
                             total = '-' + A.toFixed(2).toString()
                         }
@@ -391,20 +391,20 @@
                     }
 
                     amount = amount - amort_cap
-                    
-                    
+
+
 
                     $('tbody').append(
                         "<tr><td>" + due_id + "</td><td>" + date + "</td><td>" + amount.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,') + "</td><td>" + amort_cap.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,') + "</td><td>" + amort_interest.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,') + "</td><td>" + fixed_due.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,') + "</td><td>" + total.replace(/(\d)(?=(\d{3})+\.)/g, '$1,') + "</td></tr>"
                     );
-                    
+
                     amort_interest = amount * (load_interest / 100) /* P * It */
                 }
                 console.log(amount)
                 $('.hide-title').text('Calculo de crédito de ' + name + ' c.c ' + identifier.toString());
                 $('.print').removeClass('hide');
 
-            } 
+            }
 
             $('.send').click(function () {
                 calculate($( ".period" ).is(':checked'));
@@ -447,15 +447,15 @@
             });
 
             $('.cash').focus(function (){
-                $('.nominal, .interest').prop('disabled', true);       
+                $('.nominal, .interest').prop('disabled', true);
             });
 
             $('.nominal').focus(function (){
-                $('.cash, .interest').prop('disabled', true);       
+                $('.cash, .interest').prop('disabled', true);
             });
 
             $('.interest').focus(function (){
-                $('.nominal, .cash').prop('disabled', true);    
+                $('.nominal, .cash').prop('disabled', true);
             });
 
             $('.print').click(function () {
